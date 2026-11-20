@@ -101,3 +101,50 @@ FlutterFlow
 Nadhir Ben Ghorbel
 Computer Engineering Student – Backend & Full-Stack Development
 Paris, France
+
+## Java application
+
+This repository also contains a JavaFX desktop application and a Spring Boot
+REST API for animal records.
+
+### Run the REST API
+
+Install JDK 17 or newer, Maven, and MySQL. Create the `united_pets` database
+and configure its `animal` table. The existing database connection expects
+MySQL at `localhost:3306`, username `root`, and an empty password; update
+`utils.MyBD` if your local settings differ.
+
+From the project folder, start the API:
+
+```powershell
+mvn spring-boot:run
+```
+
+The API listens at `http://localhost:8080`:
+
+| Method | Path | Action |
+| --- | --- | --- |
+| `GET` | `/api/animals` | List animals |
+| `GET` | `/api/animals/{id}` | Get one animal |
+| `POST` | `/api/animals` | Create an animal (`201 Created`) |
+| `PUT` | `/api/animals/{id}` | Update an animal |
+| `DELETE` | `/api/animals/{id}` | Delete an animal (`204 No Content`) |
+
+Example create request:
+
+```powershell
+Invoke-RestMethod -Method Post -Uri http://localhost:8080/api/animals `
+  -ContentType "application/json" `
+  -Body '{"name":"Milo","breed":"Mixed","status":"Available","type":"Dog","age":2,"enrollmentDate":"2026-11-20","image":"","description":"Friendly"}'
+```
+
+The API returns JSON, uses HTTP status codes for invalid or missing records,
+and returns `503 Service Unavailable` when MySQL is not connected.
+
+### Run the JavaFX app
+
+With Maven installed, run:
+
+```powershell
+mvn javafx:run
+```

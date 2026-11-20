@@ -19,16 +19,22 @@ public class ServiceAnimal implements IService<Animal> {
     public void add(Animal animal) throws SQLException {
         String req = "INSERT INTO animal (Animal_Name, Animal_Breed, Animal_Status, Animal_Type, Age, Enrollement_Date, Animal_Image, Animal_Description) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-        PreparedStatement pre = con.prepareStatement(req);
-        pre.setString(1, animal.getAnimal_Name());
-        pre.setString(2, animal.getAnimal_Breed());
-        pre.setString(3, animal.getAnimal_Status());
-        pre.setString(4, animal.getAnimal_Type());
-        pre.setInt(5, animal.getAge());
-        pre.setDate(6,animal.getEnrollement_Date());
-        pre.setString(7, animal.getAnimal_Image());
-        pre.setString(8, animal.getAnimal_description());
-        pre.executeUpdate();
+        try (PreparedStatement pre = con.prepareStatement(req, Statement.RETURN_GENERATED_KEYS)) {
+            pre.setString(1, animal.getAnimal_Name());
+            pre.setString(2, animal.getAnimal_Breed());
+            pre.setString(3, animal.getAnimal_Status());
+            pre.setString(4, animal.getAnimal_Type());
+            pre.setInt(5, animal.getAge());
+            pre.setDate(6, animal.getEnrollement_Date());
+            pre.setString(7, animal.getAnimal_Image());
+            pre.setString(8, animal.getAnimal_description());
+            pre.executeUpdate();
+            try (ResultSet keys = pre.getGeneratedKeys()) {
+                if (keys.next()) {
+                    animal.setAnimalId(keys.getInt(1));
+                }
+            }
+        }
     }
 
 
